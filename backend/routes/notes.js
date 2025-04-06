@@ -40,4 +40,24 @@ router.post('/addnote', fetchuser, [
     }
 })
 
+//ROUTE 3: Update a note using: POST "/api/notes/addnote". Login req
+
+router.put('/updatenote/:id', fetchuser, async (req, res) => {
+    const { title, description, tag } = req.body;
+    const newNote = {};
+    if (title) newNote.title = title;
+    if (title) newNote.description = description;
+    if (title) newNote.tag = tag;
+
+    var note = await Notes.findById(req.params.id);
+    if (!note) {
+        return res.status(404).send('Not found');
+    }
+    if (note.user.toString() !== req.user.id) {
+        return res.status(401).send("Not allowed");
+    }
+    note = await Notes.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true })
+    res.send(note);
+})
+
 module.exports = router
