@@ -40,7 +40,7 @@ router.post('/addnote', fetchuser, [
     }
 })
 
-//ROUTE 3: Update a note using: POST "/api/notes/addnote". Login req
+//ROUTE 3: Update a note using: POST "/api/notes/updatenote". Login req
 
 router.put('/updatenote/:id', fetchuser, async (req, res) => {
     const { title, description, tag } = req.body;
@@ -58,6 +58,20 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
     }
     note = await Notes.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true })
     res.send(note);
+})
+
+//ROUTE 4: Delete a note using: POST "/api/notes/deletenote". Login req
+
+router.delete('/deletenote/:id', fetchuser, async (req, res) => {
+    var note = await Notes.findById(req.params.id);
+    if (!note) {
+        return res.status(404).send('Not found');
+    }
+    if (note.user.toString() !== req.user.id) {
+        return res.status(401).send("Not allowed");
+    }
+    note = await Notes.findByIdAndDelete(req.params.id)
+    res.send({"Success":"Note deleted", });
 })
 
 module.exports = router
