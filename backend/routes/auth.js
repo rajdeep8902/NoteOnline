@@ -34,13 +34,6 @@ router.post('/createuser',
                 email: req.body.email,
                 password: secPass,
             })
-            // .then(user=>res.json(user))
-            // .catch(err=>{
-            //     console.log(err);
-            //     res.json({error:'Please enter unique email',
-            //         msg:err.message
-            //     })
-            // });
             const data = {
                 user: {
                     id: user.id
@@ -92,7 +85,7 @@ router.post('/login', [
 //ROUTE-3: Get logged in user details using: "/api/auth/getuser". Login
 router.post('/getuser', fetchuser, async (req, res) => {
     try {
-        userId=req.user.id;
+        const userId=req.user.id;
         const user = await User.findById(userId).select("-password");
         res.send(user)
     } catch (error) {
