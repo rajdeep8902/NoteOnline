@@ -67,7 +67,7 @@ router.post('/login', [
         if (!user) {
             return res.status(400).json({ success, error: "Give correct credentials" })
         }
-        const pwcmp = bcrypt.compare(password, user.password);
+        const pwcmp = await bcrypt.compare(password, user.password);
         if (!pwcmp) {
             return res.status(400).json({ success, error: "Give correct credentials" })
         }
